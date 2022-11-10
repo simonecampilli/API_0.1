@@ -67,6 +67,6 @@ class ProvaViewSet(viewsets.ModelViewSet):
     """
     queryset = Prova.objects.all()
     serializer_class = ProvaSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-                          IsOwnerOrReadOnly]
+    #permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+                    #      IsOwnerOrReadOnly]
 

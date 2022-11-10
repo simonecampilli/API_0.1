@@ -10,4 +10,5 @@ router.register(r'prova', views.ProvaViewSet,basename="prova")
 # The API URLs are now determined automatically by the router.
 urlpatterns = [
     path('', include(router.urls)),
+
 ]
