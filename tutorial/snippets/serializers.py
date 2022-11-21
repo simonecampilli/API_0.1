@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from snippets.models import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES, Prova
+from snippets.models import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES, Prova, Home, Album
 from django.contrib.auth.models import User
 
 class SnippetSerializer(serializers.HyperlinkedModelSerializer):
@@ -24,3 +24,16 @@ class ProvaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Prova
         fields = ['title', 'testo']
+
+
+class HomeSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = Home
+        fields = ['testo']
+
+
+class AlbumSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Album
+        fields= ['title']

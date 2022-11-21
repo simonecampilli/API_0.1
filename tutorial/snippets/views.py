@@ -1,5 +1,5 @@
-from snippets.models import Snippet,Prova
-from snippets.serializers import SnippetSerializer, ProvaSerializer
+from snippets.models import Snippet,Prova, Home,Album
+from snippets.serializers import SnippetSerializer, ProvaSerializer,HomeSerializer, AlbumSerializer
 from rest_framework import generics
 
 from rest_framework import permissions
@@ -67,6 +67,20 @@ class ProvaViewSet(viewsets.ModelViewSet):
     """
     queryset = Prova.objects.all()
     serializer_class = ProvaSerializer
+    Response("prova121212")
+    #permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+                    #      IsOwnerOrReadOnly]
+
+class AlbumViewSet(viewsets.ModelViewSet):
+    """
+    This viewset automatically provides `list`, `create`, `retrieve`,
+    `update` and `destroy` actions.
+
+    Additionally we also provide an extra `highlight` action.
+    """
+    queryset = Album.objects.all()
+    serializer_class = AlbumSerializer
+
     #permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                     #      IsOwnerOrReadOnly]
 
@@ -84,3 +98,15 @@ def my_view(request):
     else:
         Response("no")
 
+class HomeViewSet(viewsets.ModelViewSet):
+    """
+    This viewset automatically provides `list`, `create`, `retrieve`,
+    `update` and `destroy` actions.
+
+    Additionally we also provide an extra `highlight` action.
+    """
+    queryset = Home.objects.all()
+    serializer_class = HomeSerializer
+
+    #permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+                    #      IsOwnerOrReadOnly]

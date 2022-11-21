@@ -39,7 +39,20 @@ class Snippet(models.Model):
         self.highlighted = highlight(self.code, lexer, formatter)
         super().save(*args, **kwargs)
 
+class Album(models.Model):
+    title = models.CharField(max_length=100, blank=True, default='')
+    def save(self, *args, **kwargs):
+        """
+        Use the `pygments` library to create a highlighted HTML
+        representation of the code snippet.
+        """
 
+        #linenos = 'table' if self.linenos else False
+
+        #formatter = HtmlFormatter(style=self.style,
+                                #  full=True, **options)
+        #self.highlighted = highlight(self.testo, formatter)
+        super().save(*args, **kwargs)
 
 class Prova(models.Model):
     created = models.DateTimeField(auto_now_add=True)
@@ -64,4 +77,6 @@ class Prova(models.Model):
 
 
 
+class Home(models.Model):
 
+    testo = models.TextField()
