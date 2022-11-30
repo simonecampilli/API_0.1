@@ -1,11 +1,11 @@
-from snippets.models import Snippet,Prova, Home,Album
-from snippets.serializers import SnippetSerializer, ProvaSerializer,HomeSerializer, AlbumSerializer
+from snippets.models import Snippet,Prova, Home,Album, Statistiche
+from snippets.serializers import SnippetSerializer, ProvaSerializer,HomeSerializer, AlbumSerializer, StatisticheSerializer
 from rest_framework import generics
 
 from rest_framework import permissions
 
 from rest_framework.decorators import api_view
-from rest_framework.response import Response
+
 from rest_framework.reverse import reverse
 
 
@@ -50,6 +50,12 @@ class SnippetViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated,
                           IsOwnerOrReadOnly]
 
+    def get_queryset(self):
+        # after get all products on DB it will be filtered by its owner and return the queryset
+        owner_queryset = self.queryset.filter(owner=self.request.user)
+        return owner_queryset
+
+
     @action(detail=True, renderer_classes=[renderers.StaticHTMLRenderer])
     def highlight(self, request, *args, **kwargs):
         snippet = self.get_object()
@@ -57,6 +63,35 @@ class SnippetViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+
+class StatisticheViewSet(viewsets.ModelViewSet):
+    """
+    This viewset automatically provides `list`, `create`, `retrieve`,
+    `update` and `destroy` actions.
+
+    Additionally we also provide an extra `highlight` action.
+    """
+    queryset = Statistiche.objects.all()
+    serializer_class = StatisticheSerializer
+    #permission_classes = [permissions.IsAuthenticated,
+                      #    IsOwnerOrReadOnly]
+
+    @action(detail=True, renderer_classes=[renderers.StaticHTMLRenderer])
+    def highlight(self, request, *args, **kwargs):
+       statistiche = self.get_object()
+       return Response(statistiche.highlighted)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+    permission_classes = [permissions.IsAuthenticated,
+                          IsOwnerOrReadOnly]
+
+    def get_queryset(self):
+        # after get all products on DB it will be filtered by its owner and return the queryset
+        owner_queryset = self.queryset.filter(owner=self.request.user)
+        return owner_queryset
 
 class ProvaViewSet(viewsets.ModelViewSet):
     """
@@ -87,16 +122,7 @@ class AlbumViewSet(viewsets.ModelViewSet):
 
 from django.contrib.auth import authenticate, login
 
-def my_view(request):
-    username = request.POST['username']
-    password = request.POST['password']
-    user = authenticate(request, username=username, password=password)
-    if user is not None:
-        login(request, user)
 
-        Response("ok")
-    else:
-        Response("no")
 
 class HomeViewSet(viewsets.ModelViewSet):
     """
@@ -110,3 +136,21 @@ class HomeViewSet(viewsets.ModelViewSet):
 
     #permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                     #      IsOwnerOrReadOnly]
+
+
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+class ExampleView(APIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, format=None):
+        content = {
+            'user': str(request.user),  # `django.contrib.auth.User` instance.
+            'auth': str(request.auth),  # None
+        }
+        return Response(content)
+

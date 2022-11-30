@@ -80,3 +80,40 @@ class Prova(models.Model):
 class Home(models.Model):
 
     testo = models.TextField()
+
+
+class Statistiche(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    title = models.CharField(max_length=100, blank=True, default='')
+    campo_dati = models.TextField()
+    owner = models.ForeignKey('auth.User', related_name='statistiche', on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ['created']
+
+   # def save(self, *args, **kwargs):
+        """
+        Use the `pygments` library to create a highlighted HTML
+        representation of the code snippet.
+        """
+
+        #linenos = 'table' if self.linenos else False
+        #options = {'title': self.title} if self.title else {}
+        #formatter = HtmlFormatter(style=self.style,
+                                #  full=True, **options)
+        #self.highlighted = highlight(self.testo)
+        #super().save(*args, **kwargs)
+
+#TOKEN
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)
+
+
+

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from snippets.models import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES, Prova, Home, Album
+from snippets.models import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES, Prova, Home, Album, Statistiche
 from django.contrib.auth.models import User
 
 class SnippetSerializer(serializers.HyperlinkedModelSerializer):
@@ -37,3 +37,12 @@ class AlbumSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Album
         fields= ['title']
+
+
+class StatisticheSerializer(serializers.HyperlinkedModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
+    #highlight = serializers.HyperlinkedIdentityField(view_name='statistiche-highlight', format='html')
+
+    class Meta:
+        model = Statistiche
+        fields = [ 'id','owner','title', 'campo_dati']
